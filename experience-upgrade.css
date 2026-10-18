@@ -1,0 +1,1007 @@
+/*
+  Shreya birthday website — visual enhancement layer
+  Add this AFTER style.css. It is designed to enhance the current page,
+  not replace the existing stylesheet.
+*/
+
+:root {
+  --experience-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --experience-pink-glow: rgba(245, 184, 208, 0.18);
+  --experience-line: rgba(245, 184, 208, 0.22);
+}
+
+html {
+  scroll-padding-top: 86px;
+  scrollbar-color: #8e5b83 #100c20;
+}
+
+body {
+  isolation: isolate;
+}
+
+body::selection,
+body *::selection {
+  color: #100c20;
+  background: #f5b8d0;
+}
+
+/* A slim progress line makes long-page navigation feel intentional. */
+.scroll-progress {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: 0;
+  height: 3px;
+  z-index: 1000;
+  pointer-events: none;
+  background: linear-gradient(90deg, #d979a8, #f5b8d0, #f5d7a0);
+  box-shadow: 0 0 14px rgba(245, 184, 208, 0.55);
+  transition: width 80ms linear;
+}
+
+/* Keep the navigation close by, with a subtle glass effect after scrolling. */
+.topbar {
+  position: fixed;
+  height: 72px;
+  background: rgba(16, 12, 32, 0.18);
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  border-bottom-color: transparent;
+  transition:
+    background 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease,
+    backdrop-filter 260ms ease;
+}
+
+body.has-scrolled .topbar {
+  background: rgba(16, 12, 32, 0.78);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border-bottom-color: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
+}
+
+.brand,
+.nav-link {
+  transition: color 220ms ease, opacity 220ms ease;
+}
+
+.brand:hover,
+.nav-link:hover {
+  color: var(--pink);
+}
+
+/* A more cinematic opening without taking control away from the visitor. */
+.hero {
+  overflow: hidden;
+  background-size: cover;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(217, 121, 168, 0.13), transparent 48%),
+    linear-gradient(90deg, rgba(16, 12, 32, 0.2), transparent 48%, rgba(16, 12, 32, 0.16));
+  z-index: -1;
+}
+
+.hero-glow {
+  transition: transform 350ms ease-out;
+  animation: glow-breathe 7s ease-in-out infinite alternate;
+  transform: translate3d(var(--hero-shift-x, 0px), var(--hero-shift-y, 0px), 0);
+}
+
+.hero .eyebrow,
+.hero .script,
+.hero h1,
+.hero .hero-copy,
+.hero .primary-btn,
+.hero .scroll-note {
+  animation: hero-rise 850ms var(--experience-ease) both;
+}
+
+.hero .eyebrow { animation-delay: 100ms; }
+.hero .script { animation-delay: 220ms; }
+.hero h1 { animation-delay: 320ms; }
+.hero .hero-copy { animation-delay: 440ms; }
+.hero .primary-btn { animation-delay: 540ms; }
+.hero .scroll-note { animation-delay: 650ms; }
+
+.primary-btn,
+.secondary-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(217, 121, 168, 0.07);
+  transition:
+    transform 260ms var(--experience-ease),
+    background 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.primary-btn::before,
+.secondary-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.13), transparent 78%);
+  transform: translateX(-120%);
+  transition: transform 700ms var(--experience-ease);
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+  box-shadow: 0 12px 34px rgba(217, 121, 168, 0.18);
+}
+
+.primary-btn:hover::before,
+.secondary-btn:hover::before {
+  transform: translateX(120%);
+}
+
+/* Elements receive this class from experience-upgrade.js when they enter view. */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.992);
+  filter: blur(4px);
+  transition:
+    opacity 760ms var(--experience-ease),
+    transform 760ms var(--experience-ease),
+    filter 760ms var(--experience-ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+  will-change: auto;
+}
+
+/* Countdown cards feel tactile, but remain simple and readable. */
+.time-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018));
+  border-color: var(--experience-line);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  transition: border-color 240ms ease, background 240ms ease, box-shadow 240ms ease;
+}
+
+.time-card::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 184, 208, 0.55), transparent);
+}
+
+/* Gallery polish. The viewer remains usable with mouse, touch, and keyboard. */
+.gallery {
+  align-items: stretch;
+}
+
+.photo-card {
+  min-width: 0;
+  min-height: clamp(280px, 30vw, 390px);
+  border: 1px solid rgba(245, 184, 208, 0.12);
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 420ms var(--experience-ease),
+    box-shadow 420ms var(--experience-ease),
+    border-color 300ms ease,
+    filter 300ms ease;
+}
+
+.photo-card::after {
+  content: "OPEN MEMORY  ↗";
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(16, 12, 32, 0.42);
+  color: #fff3e9;
+  font: 600 8px/1 "DM Sans", sans-serif;
+  letter-spacing: 0.12em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 240ms ease, transform 240ms ease;
+  pointer-events: none;
+}
+
+.photo-card:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 5px;
+}
+
+.photo-card.has-photo {
+  background-repeat: no-repeat;
+}
+
+.photo-card .photo-caption {
+  z-index: 1;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.62);
+  transition: transform 300ms var(--experience-ease);
+}
+
+/* Keep captions and the hover hint usable for touch devices too. */
+.photo-card:not(.has-photo)::after {
+  display: none;
+}
+
+/* Cake: glow softly intensifies while the birthday moment is happening. */
+.cake-glow {
+  animation: cake-glow 4s ease-in-out infinite alternate;
+}
+
+.candle {
+  touch-action: manipulation;
+  transition: opacity 220ms ease, filter 220ms ease, transform 220ms ease;
+}
+
+.candle:focus-visible,
+.play-btn:focus-visible,
+#close-lightbox:focus-visible,
+.lightbox-nav-button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.candle.out {
+  filter: saturate(0.65);
+}
+
+/* Music orb gets a gentle pulse only while the actual audio element is playing. */
+.music-orb {
+  position: relative;
+  isolation: isolate;
+  transition: box-shadow 350ms ease, border-color 350ms ease;
+}
+
+.music-orb::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  z-index: -1;
+  border: 1px solid rgba(245, 184, 208, 0.18);
+  border-radius: inherit;
+  opacity: 0;
+  transform: scale(0.86);
+}
+
+body.is-music-playing .music-orb {
+  border-color: rgba(245, 184, 208, 0.8);
+  box-shadow: 0 0 48px rgba(217, 121, 168, 0.28);
+  animation: music-orb-float 3s ease-in-out infinite;
+}
+
+body.is-music-playing .music-orb::before {
+  animation: music-orb-ring 2.4s ease-out infinite;
+}
+
+/* Letter and final message: a little more warmth and depth. */
+.letter-card {
+  border-color: rgba(245, 184, 208, 0.3);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(245, 184, 208, 0.07), transparent 58%),
+    linear-gradient(135deg, rgba(255, 248, 240, 0.045), rgba(228, 181, 209, 0.025));
+}
+
+.letter-card::after {
+  content: "✦";
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 12px;
+  color: var(--gold);
+  background: #171027;
+  font-size: 17px;
+}
+
+.final-surprise:not([hidden]) {
+  border-color: rgba(245, 184, 208, 0.42);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(245, 184, 208, 0.12), transparent 70%),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: 0 20px 70px rgba(217, 121, 168, 0.1);
+}
+
+/* Enhanced full-screen photo viewer controls are added by the JS layer. */
+.lightbox {
+  z-index: 2000;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  background: rgba(8, 5, 16, 0.92);
+  overscroll-behavior: contain;
+}
+
+.lightbox img {
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  animation: lightbox-image-in 360ms var(--experience-ease) both;
+}
+
+#close-lightbox {
+  z-index: 4;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+#close-lightbox:hover {
+  background: rgba(245, 184, 208, 0.18);
+  transform: rotate(5deg);
+}
+
+.lightbox-nav-button {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #fff3e9;
+  background: rgba(255, 255, 255, 0.08);
+  font: 400 30px/1 "DM Sans", sans-serif;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.lightbox-nav-button:hover {
+  background: rgba(245, 184, 208, 0.18);
+  border-color: rgba(245, 184, 208, 0.55);
+}
+
+.lightbox-prev { left: clamp(12px, 3vw, 42px); }
+.lightbox-next { right: clamp(12px, 3vw, 42px); }
+
+.lightbox-counter {
+  position: absolute;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  color: rgba(255, 243, 233, 0.78);
+  font: 500 11px/1.4 "DM Sans", sans-serif;
+  letter-spacing: 0.16em;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(16, 12, 32, 0.45);
+}
+
+.lightbox-nav-button[hidden],
+.lightbox-counter[hidden] {
+  display: none;
+}
+
+body.lightbox-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* A soft light that follows the pointer on desktop; never shown on touch. */
+.pointer-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 250px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 121, 168, 0.075), transparent 68%);
+  transform: translate3d(var(--pointer-x, -400px), var(--pointer-y, -400px), 0) translate(-50%, -50%);
+  will-change: transform;
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(16px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes glow-breathe {
+  from { opacity: 0.64; scale: 0.96; }
+  to { opacity: 1; scale: 1.04; }
+}
+
+@keyframes cake-glow {
+  from { opacity: 0.66; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes music-orb-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes music-orb-ring {
+  0% { opacity: 0.65; transform: scale(0.86); }
+  100% { opacity: 0; transform: scale(1.28); }
+}
+
+@keyframes lightbox-image-in {
+  from { opacity: 0; transform: scale(0.975); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .time-card:hover {
+    border-color: rgba(245, 184, 208, 0.45);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.025));
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18), 0 0 28px rgba(217, 121, 168, 0.06);
+  }
+
+  .photo-card:hover {
+    transform: translateY(-7px) scale(1.012);
+    border-color: rgba(245, 184, 208, 0.36);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.28), 0 0 35px rgba(217, 121, 168, 0.09);
+    filter: saturate(1.05);
+  }
+
+  .photo-card:nth-child(2):hover {
+    transform: translateY(17px) scale(1.012);
+  }
+
+  .photo-card:hover::after,
+  .photo-card:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .photo-card:hover .photo-caption {
+    transform: translateY(-3px);
+  }
+}
+
+@media (min-width: 651px) and (max-width: 900px) {
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .photo-card,
+  .photo-card:nth-child(2),
+  .photo-card:nth-child(2):hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .topbar {
+    height: 62px;
+    padding: 0 20px;
+  }
+
+  body.has-scrolled .topbar {
+    background: rgba(16, 12, 32, 0.88);
+  }
+
+  .nav-link {
+    font-size: 11px;
+  }
+
+  .hero {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .hero .eyebrow,
+  .section-kicker {
+    letter-spacing: 0.17em;
+    line-height: 1.8;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.15rem, 10.2vw, 4.2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .hero-bottom {
+    left: 18px;
+    right: 18px;
+    gap: 8px;
+    letter-spacing: 0.09em;
+    line-height: 1.6;
+  }
+
+  .scroll-note {
+    max-width: 250px;
+    line-height: 1.8;
+  }
+
+  .photo-card {
+    min-height: clamp(285px, 86vw, 360px);
+  }
+
+  .letter-footer {
+    line-height: 1.8;
+    letter-spacing: 0.12em;
+  }
+
+  .lightbox {
+    padding: 62px 12px 54px;
+  }
+
+  .lightbox img {
+    max-width: 100%;
+    max-height: 78svh;
+  }
+
+  .lightbox-nav-button {
+    top: auto;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: 42px;
+    height: 42px;
+    transform: none;
+    font-size: 26px;
+  }
+
+  .lightbox-nav-button:hover {
+    transform: none;
+  }
+
+  .lightbox-prev { left: 18px; }
+  .lightbox-next { right: 18px; }
+
+  .lightbox-counter {
+    bottom: max(29px, calc(env(safe-area-inset-bottom) + 10px));
+  }
+}
+
+@media (max-width: 420px) {
+  .countdown {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 320px;
+  }
+
+  .time-card {
+    max-width: none;
+    padding: 17px 8px 15px;
+  }
+
+  .time-card strong {
+    font-size: clamp(30px, 9vw, 42px);
+  }
+
+  .time-card span {
+    letter-spacing: 0.09em;
+  }
+
+  .cake-wrap {
+    max-width: 100%;
+  }
+
+  .music-player {
+    min-width: 0;
+  }
+
+  .track-info strong,
+  .track-info span {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .hero .eyebrow,
+  .hero .script,
+  .hero h1,
+  .hero .hero-copy,
+  .hero .primary-btn,
+  .hero .scroll-note,
+  .hero-glow,
+  .cake-glow,
+  .music-orb,
+  .music-orb::before,
+  .reveal-on-scroll,
+  .lightbox img {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .pointer-glow,
+  .scroll-progress {
+    display: none !important;
+  }
+}
+
+/* ==================== MOONLIGHT EXPERIENCE ==================== */
+:root {
+  --moon-ivory: #f8f0de;
+  --moon-lilac: #cbbce9;
+  --moon-glow: rgba(205, 192, 239, 0.24);
+}
+
+.experience-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Small, discoverable moon control in the navigation. */
+.ambient-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid rgba(205, 192, 239, 0.24);
+  border-radius: 999px;
+  color: #f5ecff;
+  background: rgba(205, 192, 239, 0.07);
+  font: 500 10px/1 "DM Sans", sans-serif;
+  letter-spacing: 0.035em;
+  cursor: pointer;
+  transition: background 240ms ease, border-color 240ms ease, box-shadow 240ms ease, transform 240ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ambient-toggle-icon {
+  display: inline-grid;
+  place-items: center;
+  font: 24px/0.8 "Playfair Display", serif;
+  color: var(--moon-ivory);
+  transform-origin: center;
+  transition: transform 300ms ease, color 300ms ease;
+}
+
+.ambient-toggle.is-playing {
+  border-color: rgba(205, 192, 239, 0.5);
+  background: rgba(205, 192, 239, 0.13);
+  box-shadow: 0 0 24px rgba(205, 192, 239, 0.12);
+}
+
+.ambient-toggle.is-playing .ambient-toggle-icon {
+  color: #fff4c9;
+  animation: moon-breathe 4s ease-in-out infinite;
+}
+
+.ambient-toggle.is-muted .ambient-toggle-icon {
+  color: #b9adc9;
+  transform: rotate(-20deg);
+}
+
+.ambient-toggle:hover {
+  border-color: rgba(205, 192, 239, 0.58);
+  background: rgba(205, 192, 239, 0.15);
+}
+
+.ambient-toggle:focus-visible,
+.moon-wish:focus-visible,
+.moon-note-card button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* A textured moon sits quietly in the hero and can be tapped for a secret wish. */
+.moon-wish {
+  position: absolute;
+  top: clamp(86px, 12vh, 124px);
+  right: clamp(24px, 9vw, 136px);
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  width: clamp(78px, 12vw, 144px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--moon-ivory);
+  background: transparent;
+  cursor: pointer;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+  animation: moon-float 8s ease-in-out infinite;
+}
+
+.moon-wish::before {
+  content: "";
+  position: absolute;
+  inset: -24%;
+  z-index: -2;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(211, 202, 244, 0.20), rgba(179, 158, 225, 0.07) 42%, transparent 72%);
+  filter: blur(5px);
+  opacity: 0.95;
+  transition: opacity 300ms ease, transform 500ms ease;
+}
+
+.moon-halo {
+  position: absolute;
+  inset: 3%;
+  border: 1px solid rgba(248, 240, 222, 0.17);
+  border-radius: 50%;
+  box-shadow: 0 0 45px rgba(205, 192, 239, 0.11), inset 0 0 25px rgba(255, 255, 255, 0.04);
+  opacity: 0.8;
+  transform: scale(1.12);
+  transition: transform 500ms ease, opacity 500ms ease;
+}
+
+.moon-disc {
+  position: relative;
+  display: block;
+  width: 73%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 29% 22%, rgba(255, 255, 244, 0.95), transparent 24%),
+    radial-gradient(circle at 72% 70%, rgba(166, 151, 191, 0.28), transparent 38%),
+    radial-gradient(circle at 35% 65%, rgba(184, 172, 202, 0.72), transparent 35%),
+    linear-gradient(145deg, #fff9e9 0%, #e8e0d6 42%, #c4bbd1 100%);
+  box-shadow: 0 0 18px rgba(255, 244, 218, 0.24), 0 0 46px rgba(205, 192, 239, 0.24), inset -10px -9px 22px rgba(70, 54, 100, 0.17), inset 4px 5px 12px rgba(255, 255, 255, 0.45);
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), filter 500ms ease;
+}
+
+.moon-disc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(110deg, rgba(255,255,255,0.17), transparent 42%, rgba(45,35,71,0.16));
+  pointer-events: none;
+}
+
+.moon-crater {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  background: rgba(151, 141, 169, 0.22);
+  box-shadow: inset 2px 2px 4px rgba(82, 72, 104, 0.12), 1px 1px 2px rgba(255, 255, 255, 0.32);
+}
+
+.crater-one { width: 19%; height: 19%; left: 22%; top: 32%; }
+.crater-two { width: 11%; height: 11%; left: 57%; top: 23%; }
+.crater-three { width: 25%; height: 25%; left: 52%; top: 54%; }
+.crater-four { width: 8%; height: 8%; left: 32%; top: 70%; }
+
+.moon-spark {
+  position: absolute;
+  z-index: 2;
+  color: #fff1c7;
+  text-shadow: 0 0 14px rgba(255, 231, 172, 0.8);
+  font-size: clamp(12px, 1.6vw, 19px);
+  animation: moon-sparkle 3.4s ease-in-out infinite;
+}
+
+.moon-spark-one { right: 2%; top: 18%; }
+.moon-spark-two { left: 4%; bottom: 24%; animation-delay: -1.6s; }
+
+.moon-caption {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  width: max-content;
+  max-width: 135px;
+  transform: translateX(-50%);
+  color: rgba(248, 240, 222, 0.72);
+  font: 500 8px/1.4 "DM Sans", sans-serif;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  transition: opacity 250ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .moon-wish:hover .moon-disc { transform: scale(1.07) rotate(-5deg); filter: brightness(1.06); }
+  .moon-wish:hover::before { opacity: 1; transform: scale(1.12); }
+  .moon-wish:hover .moon-halo { opacity: 1; transform: scale(1.25); }
+  .moon-wish:hover .moon-caption { opacity: 1; }
+}
+
+.hero > .eyebrow,
+.hero > .script,
+.hero > h1,
+.hero > .hero-copy,
+.hero > .primary-btn,
+.hero > .scroll-note,
+.hero > .hero-bottom {
+  position: relative;
+  z-index: 1;
+}
+
+/* Moon wish dialog: a quiet, focused moment rather than a browser alert. */
+.moon-note-backdrop[hidden] { display: none; }
+
+.moon-note-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: max(24px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom));
+  background: rgba(7, 5, 18, 0.78);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  animation: moon-backdrop-in 260ms ease both;
+}
+
+.moon-note-card {
+  position: relative;
+  width: min(100%, 510px);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: clamp(32px, 7vw, 58px) clamp(24px, 7vw, 56px) 34px;
+  text-align: center;
+  border: 1px solid rgba(218, 207, 243, 0.35);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(205, 192, 239, 0.18), transparent 48%),
+    linear-gradient(150deg, rgba(39, 30, 63, 0.98), rgba(15, 11, 32, 0.99));
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5), 0 0 55px rgba(205, 192, 239, 0.08);
+  animation: moon-card-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.moon-note-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 50%;
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.05);
+  font: 300 27px/1 "DM Sans", sans-serif;
+  cursor: pointer;
+}
+
+.moon-note-mini-moon {
+  margin: 0 auto 16px;
+  color: var(--moon-ivory);
+  font: 400 56px/1 "Playfair Display", serif;
+  text-shadow: 0 0 30px rgba(205, 192, 239, 0.45);
+  animation: moon-breathe 4s ease-in-out infinite;
+}
+
+.moon-note-kicker {
+  color: var(--moon-lilac);
+  font: 700 9px/1.8 "DM Sans", sans-serif;
+  letter-spacing: 0.22em;
+}
+
+.moon-note-card h2 {
+  margin: 12px 0 18px;
+  color: var(--moon-ivory);
+  font: 500 clamp(28px, 6vw, 40px)/1.15 "Playfair Display", serif;
+  letter-spacing: -0.025em;
+}
+
+.moon-note-card #moon-note-copy {
+  color: #e4dced;
+  font: 400 14px/1.95 "DM Sans", sans-serif;
+  margin: 0 auto 24px;
+}
+
+.moon-note-done {
+  min-height: 44px;
+  padding: 12px 19px;
+  border: 1px solid rgba(205, 192, 239, 0.42);
+  border-radius: 999px;
+  color: #fff7eb;
+  background: rgba(205, 192, 239, 0.1);
+  font: 600 11px/1.4 "DM Sans", sans-serif;
+  cursor: pointer;
+  transition: background 220ms ease, transform 220ms ease;
+}
+
+.moon-note-done:hover { background: rgba(205, 192, 239, 0.2); transform: translateY(-2px); }
+.moon-note-stars { margin-top: 24px; color: #f5d7a0; font-size: 12px; letter-spacing: 0.16em; }
+body.moon-note-open { overflow: hidden; }
+
+@keyframes moon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes moon-breathe {
+  0%, 100% { filter: drop-shadow(0 0 7px rgba(205, 192, 239, 0.22)); }
+  50% { filter: drop-shadow(0 0 18px rgba(205, 192, 239, 0.58)); }
+}
+
+@keyframes moon-sparkle {
+  0%, 100% { opacity: 0.48; transform: scale(0.88) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.12) rotate(18deg); }
+}
+
+@keyframes moon-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes moon-card-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 650px) {
+  .ambient-toggle {
+    width: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 7px;
+    gap: 0;
+  }
+
+  .ambient-toggle-text { display: none; }
+  .ambient-toggle-icon { font-size: 25px; }
+
+  .moon-wish {
+    top: 78px;
+    right: 18px;
+    width: clamp(62px, 17vw, 88px);
+  }
+
+  .moon-caption { font-size: 7px; letter-spacing: 0.11em; }
+  .moon-note-card { border-radius: 20px; }
+}
+
+@media (max-width: 360px) {
+  .topbar { padding-left: 14px; padding-right: 14px; }
+  .brand { font-size: 19px; }
+  .nav-link { font-size: 10px; letter-spacing: 0.02em; }
+  .ambient-toggle { width: 34px; min-width: 34px; min-height: 34px; }
+  .moon-wish { right: 12px; width: 58px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moon-wish,
+  .moon-spark,
+  .ambient-toggle.is-playing .ambient-toggle-icon,
+  .moon-note-mini-moon,
+  .moon-note-backdrop,
+  .moon-note-card {
+    animation: none !important;
+  }
+
+  .moon-wish,
+  .moon-disc,
+  .moon-halo,
+  .ambient-toggle,
+  .moon-note-done {
+    transition: none !important;
+  }
+}

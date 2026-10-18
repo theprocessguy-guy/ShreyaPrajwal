@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#160f2c" />
+  <meta name="description" content="A little birthday universe made with love for Shreya." />
+  <title>For Shreya ✨ — A Birthday Surprise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+     <link rel="stylesheet" href="experience-upgrade.css" />
+   <link rel="stylesheet" href="moonlight-stage3.css" />
+
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <nav class="topbar">
+    <a class="brand" href="#home">P <span>✦</span> S</a>
+    <a class="nav-link" href="#letter">A little letter ↓</a>
+  </nav>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-glow"></div>
+      <div class="eyebrow"><span class="tiny-heart">♥</span> MADE WITH LOVE BY PRAJWAL</div>
+      <p class="script">For my favourite person</p>
+      <h1>Happy Birthday,<br><em>Shreyaaaaaaaaaaaa</em><span class="sparkle">✧</span></h1>
+      <p class="hero-copy">Some people make the world feel softer, brighter, and a little more magical.<br class="desktop-only"> You are that person for me.</p>
+      <a class="primary-btn" href="#countdown">Your little surprise <span>↓</span></a>
+      <div class="scroll-note">SCROLL SLOWLY · THIS IS ALL FOR YOU</div>
+      <div class="hero-bottom">
+        <span>02 NOVEMBER 2026</span><span class="line"></span><span>YOUR DAY, YOUR MAGIC</span>
+      </div>
+    </section>
+
+    <section class="countdown-section section-pad" id="countdown">
+      <div class="section-kicker">THE WAIT IS ALMOST OVER</div>
+      <h2>Until your special day <em>✨</em></h2>
+      <p class="muted">Every second is one second closer to celebrating you.</p>
+      <div class="countdown" aria-label="Countdown to November 2, 2026">
+        <div class="time-card"><strong id="days">00</strong><span>Days</span></div>
+        <div class="time-card"><strong id="hours">00</strong><span>Hours</span></div>
+        <div class="time-card"><strong id="minutes">00</strong><span>Minutes</span></div>
+        <div class="time-card"><strong id="seconds">00</strong><span>Seconds</span></div>
+      </div>
+      <p id="countdown-message" class="countdown-message">A little countdown for a very special girl.</p>
+    </section>
+
+    <section class="memory-section section-pad" id="memories">
+      <div class="section-kicker">LITTLE MOMENTS, BIG FEELINGS</div>
+      <h2>A tiny gallery of <em>you</em></h2>
+      <p> I LOVE YOU Shreyaaaaa <span class="tiny-heart">♥</span> 
+      </p>
+      
+      <div class="gallery">
+        <button class="photo-card photo-one" data-photo="Images/Shreya.jpg" aria-label="Open memory one">
+          <span class="photo-placeholder"><span>♡</span><b>Your favourite photo</b><small>Add photo1.jpg</small></span>
+          <span class="photo-caption">My favourite smile</span>
+        </button>
+        <button class="photo-card photo-two" data-photo="Images/Shreya1.jpg" aria-label="Open memory two">
+          <span class="photo-placeholder"><span>✧</span><b>A beautiful memory</b><small>Add photo2.jpg</small></span>
+          <span class="photo-caption">A moment I'd keep forever</span>
+        </button>
+        <button class="photo-card photo-three" data-photo="Images/Shreya2.jpg" aria-label="Open memory three">
+          <span class="photo-placeholder"><span>☾</span><b>One more little memory</b><small>Add photo3.jpg</small></span>
+          <span class="photo-caption">You make ordinary days special</span>
+        </button>
+      </div>
+      <p></p>
+    </section>
+
+    <section class="cake-section section-pad" id="cake">
+      <div class="section-kicker">MAKE A WISH, BIRTHDAY GIRL</div>
+      <h2>A cake just for <em>you</em></h2>
+      <p class="muted">Tap the candles to blow them out. Make your biggest, happiest wish. 🎂</p>
+      <div class="cake-wrap">
+        <div class="cake-glow"></div>
+        <div class="candles" id="candles">
+          <button class="candle" aria-label="Blow out candle 1"><span class="flame"></span><span class="wick"></span></button>
+          <button class="candle" aria-label="Blow out candle 2"><span class="flame"></span><span class="wick"></span></button>
+          <button class="candle" aria-label="Blow out candle 3"><span class="flame"></span><span class="wick"></span></button>
+        </div>
+        <div class="cake">
+          <div class="icing"><span>♥</span><span>✦</span><span>♥</span><span>✦</span><span>♥</span></div>
+          <div class="cake-side"></div>
+          <div class="cake-plate"></div>
+        </div>
+      </div>
+      <p id="wish-message" class="wish-message">Three candles, three wishes, and a whole universe cheering for you.</p>
+      <button class="secondary-btn" id="relight">Light the candles again ✨</button>
+    </section>
+
+    <section class="song-section section-pad">
+      <div class="music-orb"><span>♫</span></div>
+      <div class="section-kicker">OUR LITTLE SOUNDTRACK</div>
+      <h2>Press play, <em>and stay awhile</em></h2>
+      
+      <div class="music-player">
+        <button id="music-toggle" class="play-btn" aria-label="Play or pause song">▶</button>
+        <div class="track-info"><strong>A song for Shreya</strong><span id="music-status">Your song will play here</span></div>
+        <div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <audio id="song" preload="none" src="Music/our-song.mp3"></audio>
+      
+    </section>
+
+    <section class="letter-section section-pad" id="letter">
+      <div class="letter-card">
+        <div class="letter-stamp">FOR YOU, ALWAYS ♡</div>
+        <div class="section-kicker">A FEW WORDS FROM PRAJWAL</div>
+        <h2>Dear <em>Shreya,</em></h2>
+        <div class="letter-body" id="letter-body">
+          <p>I wish I could wrap all the happiness in the world into one little gift and put it in your hands today. Since I can't, I made you this tiny corner of the internet instead.</p>
+          <p>You have a way of making simple moments feel special. Your smile, your softness, and the little things that make you <em>you</em> mean more to me than I can fit into one page.</p>
+          <p>For your new year, I hope life gives you countless reasons to smile, peaceful days when you need them, brave dreams to chase, and people who care for you as genuinely as you deserve.</p>
+          <p>And whenever a day feels a little heavy, I hope you remember that someone is quietly rooting for you and wants to see you happy.</p>
+          <p class="letter-signoff">Happy Birthday, my favourite person.<br><span>With all my love, Prajwal ♡</span></p>
+        </div>
+        <div class="letter-footer">MADE ESPECIALLY FOR YOU · 02.11.2026</div>
+      </div>
+    </section>
+
+    <section class="final-section">
+      <div class="final-stars">✦　·　✧　·　✦</div>
+      <p class="script">One last thing...</p>
+      <h2>You deserve all the<br><em>beautiful things.</em></h2>
+      <button class="primary-btn" id="surprise-btn">Open your final surprise 💌</button>
+      <div id="final-surprise" class="final-surprise" hidden>
+        <div class="big-heart">♥</div>
+        <p>In every version of an ordinary day, I'm glad the world has you in it.</p>
+        <strong>Happy Birthday, Shreyaaaaaaaaaaaa!</strong>
+        <span>— Prajwal</span>
+      </div>
+      <footer>Made with love, a little stardust, and a lot of affection. <span>♡</span></footer>
+    </section>
+  </main>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button id="close-lightbox" aria-label="Close photo">×</button>
+    <img id="lightbox-image" alt="Birthday memory" />
+  </div>
+  <script src="script.js"></script>
+  <script src="experience-upgrade.js"></script>
+  <script src="moonlight-stage3.js"></script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+/* Shreya birthday website — Stage 3 moonlit story layer. Load after experience-upgrade.css. */
+:root {
+  --stage3-night: #100b21;
+  --stage3-lilac: #cfc0ef;
+  --stage3-moon: #fff0cf;
+  --stage3-line: rgba(207, 192, 239, 0.28);
+}
+
+/* A discreet progress companion. It starts as a compact moonlit pill. */
+.constellation-widget {
+  position: fixed;
+  z-index: 950;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(278px, calc(100vw - 24px));
+  color: #f8f1ff;
+  font-family: "DM Sans", sans-serif;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.constellation-toggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  margin-left: auto;
+  padding: 8px 12px;
+  border: 1px solid rgba(207, 192, 239, 0.25);
+  border-radius: 999px;
+  color: #f8f1ff;
+  background: rgba(19, 13, 39, 0.78);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24), inset 0 1px rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: background 220ms ease, border-color 220ms ease, transform 220ms ease;
+}
+.constellation-toggle:hover { background: rgba(47, 32, 73, 0.92); border-color: rgba(207, 192, 239, 0.5); transform: translateY(-2px); }
+.constellation-toggle:focus-visible,
+.constellation-collapse:focus-visible,
+.moon-envelope:focus-visible {
+  outline: 2px solid var(--stage3-moon);
+  outline-offset: 4px;
+}
+.constellation-toggle-mark { color: var(--stage3-moon); font-size: 17px; text-shadow: 0 0 14px rgba(255, 240, 207, 0.45); }
+.constellation-toggle-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; }
+.constellation-count { min-width: 32px; margin-left: 2px; padding: 4px 7px; border-radius: 999px; color: #e8defa; background: rgba(207, 192, 239, 0.12); font-size: 10px; font-variant-numeric: tabular-nums; }
+.constellation-toggle.has-progress .constellation-toggle-mark { animation: constellation-mark-glow 2.8s ease-in-out infinite; }
+
+.constellation-panel[hidden] { display: none; }
+.constellation-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: 100%;
+  padding: 16px 16px 14px;
+  border: 1px solid rgba(207, 192, 239, 0.24);
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 76% 5%, rgba(157, 137, 211, 0.17), transparent 42%),
+    linear-gradient(145deg, rgba(29, 21, 51, 0.97), rgba(12, 9, 27, 0.97));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 35px rgba(157, 137, 211, 0.08);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  animation: constellation-panel-in 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.constellation-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.constellation-panel-heading > div { display: grid; gap: 4px; }
+.constellation-kicker { color: #cfc0ef; font-size: 8px; font-weight: 700; letter-spacing: 0.2em; }
+.constellation-panel-heading strong { color: #fff4e5; font-family: "Playfair Display", serif; font-size: 19px; font-weight: 500; }
+.constellation-collapse { display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.13); border-radius: 50%; color: #fff4e5; background: rgba(255,255,255,0.04); font-size: 23px; line-height: 1; cursor: pointer; }
+.constellation-map { display: block; width: 100%; height: auto; margin: 4px 0 0; overflow: visible; }
+.constellation-line { stroke: rgba(207, 192, 239, 0.18); stroke-width: 1.2; stroke-dasharray: 3 5; transition: stroke 500ms ease, stroke-dasharray 500ms ease; }
+.constellation-line.is-lit { stroke: rgba(255, 240, 207, 0.72); stroke-dasharray: none; filter: drop-shadow(0 0 3px rgba(255, 240, 207, 0.35)); }
+.constellation-star-glow { fill: rgba(207, 192, 239, 0.02); transition: fill 450ms ease, filter 450ms ease; }
+.constellation-star-core { fill: rgba(207, 192, 239, 0.35); transition: fill 450ms ease, filter 450ms ease, r 450ms ease; }
+.constellation-star.is-lit .constellation-star-glow { fill: rgba(255, 240, 207, 0.17); filter: drop-shadow(0 0 5px rgba(255, 240, 207, 0.48)); }
+.constellation-star.is-lit .constellation-star-core { fill: #fff0cf; filter: drop-shadow(0 0 5px rgba(255, 240, 207, 0.9)); }
+.constellation-status { min-height: 32px; margin: 0; color: #d9cfe6; font-size: 10px; line-height: 1.65; }
+.constellation-bonus { margin: 11px 0 0; padding: 10px 11px; border: 1px solid rgba(245, 215, 160, 0.22); border-radius: 12px; color: #f8e8c6; background: rgba(245, 215, 160, 0.06); font-family: "Playfair Display", serif; font-size: 12px; line-height: 1.65; animation: constellation-bonus-in 600ms ease both; }
+.constellation-bonus[hidden] { display: none; }
+.constellation-widget.all-stars-found .constellation-toggle { border-color: rgba(245, 215, 160, 0.52); }
+body.experience-dialog-open .constellation-widget { opacity: 0; pointer-events: none; transform: translateY(8px); }
+
+/* Birthday cake: a brief starlight ceremony, not a blocking popup. */
+.moon-cake-ceremony {
+  max-width: 520px;
+  margin: 2px auto 22px;
+  padding: 12px 18px;
+  border: 1px solid rgba(245, 215, 160, 0.24);
+  border-radius: 999px;
+  color: #ffedc7;
+  background: rgba(245, 215, 160, 0.06);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(13px, 2.5vw, 16px);
+  line-height: 1.6;
+  animation: cake-ceremony-in 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.moon-cake-ceremony[hidden] { display: none; }
+#cake.moon-wish-celebrated .cake-glow { background: rgba(255, 205, 146, 0.3); filter: blur(46px); }
+#cake.moon-wish-celebrated .cake { filter: drop-shadow(0 0 22px rgba(255, 205, 146, 0.17)); }
+.moonlight-particle {
+  position: fixed;
+  z-index: 1450;
+  pointer-events: none;
+  user-select: none;
+  color: #ffeac0;
+  font-size: 15px;
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(255, 234, 192, 0.85);
+  animation: moonlight-particle-burst var(--particle-duration, 1.5s) cubic-bezier(0.12, 0.65, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* The final surprise becomes a small interactive envelope. Original message stays inside. */
+.final-surprise {
+  position: relative;
+  width: min(100%, 560px);
+  overflow: visible;
+  padding: clamp(20px, 4vw, 34px);
+  border-color: rgba(207, 192, 239, 0.24);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(207, 192, 239, 0.09), transparent 55%),
+    rgba(255, 255, 255, 0.035);
+}
+.moon-envelope-experience { display: grid; justify-items: center; }
+.moon-envelope-intro { margin: 0 0 16px; color: #ddd2ed; font: italic 16px/1.6 "Playfair Display", serif; }
+.moon-envelope {
+  position: relative;
+  display: block;
+  width: min(100%, 260px);
+  height: 166px;
+  margin: 5px auto 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  perspective: 800px;
+  -webkit-tap-highlight-color: transparent;
+}
+.moon-envelope-aura {
+  position: absolute;
+  inset: 12% 5%;
+  border-radius: 50%;
+  background: rgba(207, 192, 239, 0.19);
+  filter: blur(25px);
+  transition: opacity 400ms ease, transform 500ms ease;
+}
+.moon-envelope-back {
+  position: absolute;
+  inset: 20px 8px 0;
+  border: 1px solid rgba(245, 215, 160, 0.42);
+  border-radius: 8px;
+  background: linear-gradient(145deg, #a68bb9, #6e527e 62%, #45314f);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+}
+.moon-envelope-paper {
+  position: absolute;
+  z-index: 1;
+  left: 19px;
+  right: 19px;
+  bottom: 7px;
+  height: 111px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 5px 5px 2px 2px;
+  color: #49344f;
+  background: linear-gradient(135deg, #fff4df, #ead9ed);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.14);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1), height 650ms ease;
+}
+.moon-envelope-paper span { font: 500 23px/1.2 "Playfair Display", serif; }
+.moon-envelope-paper small { color: #78617f; font: 500 8px/1.4 "DM Sans", sans-serif; letter-spacing: 0.18em; text-transform: uppercase; }
+.moon-envelope-front {
+  position: absolute;
+  z-index: 3;
+  inset: 20px 8px 0;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(140deg, #9477a8, #62456f 72%, #51375f);
+  clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+  border-bottom: 1px solid rgba(245, 215, 160, 0.28);
+}
+.moon-envelope-flap {
+  position: absolute;
+  z-index: 4;
+  top: 20px;
+  left: 8px;
+  right: 8px;
+  height: 85px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(150deg, #d1b5df, #8a6c9d);
+  transform-origin: 50% 0;
+  transform: rotateX(0deg);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1), filter 650ms ease;
+  backface-visibility: hidden;
+}
+.final-surprise .moon-envelope-experience .moon-envelope > span {
+  display: block;
+  margin: 0;
+  font-size: initial;
+  color: inherit;
+}
+.moon-envelope-seal {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 81px;
+  display: grid;
+  place-items: center;
+  width: 33px;
+  height: 33px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 240, 207, 0.72);
+  border-radius: 50%;
+  color: #fff0cf;
+  background: radial-gradient(circle at 32% 23%, #d5b1dc, #8b5a8d 78%);
+  box-shadow: 0 0 20px rgba(207, 192, 239, 0.28), inset 0 1px rgba(255,255,255,0.45);
+  font-size: 14px;
+  transition: opacity 280ms ease, transform 350ms ease;
+}
+.final-surprise .moon-envelope-experience .moon-envelope .moon-envelope-seal { color: #fff0cf; font-size: 14px; }
+.moon-envelope:hover .moon-envelope-aura { transform: scale(1.12); opacity: 1; }
+.moon-envelope:hover .moon-envelope-seal { transform: translateX(-50%) scale(1.08); }
+.moon-envelope.is-open .moon-envelope-flap { transform: rotateX(180deg); filter: brightness(0.75); z-index: 0; }
+.moon-envelope.is-open .moon-envelope-paper { height: 145px; transform: translateY(-46px); }
+.moon-envelope.is-open .moon-envelope-seal { opacity: 0; transform: translate(-50%, -8px) scale(0.6); }
+.moon-envelope.is-open .moon-envelope-aura { opacity: 0.9; transform: scale(1.18); }
+.moon-envelope-hint { margin: 10px 0 0 !important; color: #cfc0ef !important; font: 600 9px/1.6 "DM Sans", sans-serif !important; letter-spacing: 0.12em; text-transform: uppercase; }
+.moon-envelope-letter[hidden] { display: none; }
+.moon-envelope-letter {
+  width: 100%;
+  margin: 29px 0 0;
+  padding: clamp(20px, 4.5vw, 32px);
+  border: 1px solid rgba(245, 215, 160, 0.2);
+  border-radius: 14px;
+  color: #f4dce8;
+  background: linear-gradient(150deg, rgba(255, 246, 224, 0.075), rgba(207, 192, 239, 0.04));
+  animation: envelope-letter-in 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.moon-envelope-letter .big-heart { animation: none; text-shadow: 0 0 24px rgba(255, 157, 207, 0.46); }
+.moon-envelope-letter p { font-size: clamp(15px, 2vw, 19px); line-height: 1.8; }
+.moon-envelope-letter strong { display: block; margin-top: 15px; color: #f5b8d0; }
+.moon-envelope-letter span { display: block; margin-top: 8px; }
+
+@keyframes constellation-panel-in { from { opacity: 0; transform: translateY(9px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes constellation-mark-glow { 0%, 100% { text-shadow: 0 0 5px rgba(255,240,207,0.35); } 50% { text-shadow: 0 0 14px rgba(255,240,207,0.95); } }
+@keyframes constellation-bonus-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes cake-ceremony-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes moonlight-particle-burst { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.35) rotate(0); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--drift-x)), calc(-50% + var(--drift-y))) scale(0.15) rotate(var(--particle-rotation, 20deg)); } }
+@keyframes envelope-letter-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 650px) {
+  .constellation-widget { right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); width: min(260px, calc(100vw - 20px)); }
+  .constellation-toggle { min-height: 39px; gap: 7px; padding: 7px 10px; }
+  .constellation-toggle-label { font-size: 9px; }
+  .constellation-panel { padding: 14px; border-radius: 17px; }
+  .moon-envelope { transform: scale(0.94); transform-origin: top center; margin-bottom: -5px; }
+  .moon-cake-ceremony { border-radius: 15px; margin-left: 2px; margin-right: 2px; }
+}
+
+@media (max-width: 360px) {
+  .constellation-toggle-label { max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .constellation-panel-heading strong { font-size: 17px; }
+  .moon-envelope { transform: scale(0.88); margin-bottom: -12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .constellation-widget *,
+  .moon-cake-ceremony,
+  .moonlight-particle,
+  .moon-envelope-letter { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
